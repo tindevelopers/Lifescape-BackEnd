@@ -1,0 +1,23 @@
+{
+	"path":{
+		"user_id": "lmNFlFtnq0MaPOvtxkJj79vHk4m2",
+		"object_id": "33e06f40-b9b0-11e9-a0ce-f1729440dcf7"
+	},
+	"body": 
+		{ "thread_id": "13fe62b0-6fd0-11e9-bbe9-3161882cdd7b",
+		"brand_id": "1",
+		"object_title": "VijayTesting EDIT",
+		"moment_link": "",
+		"media_id": 
+		[ "326abf30-b9b0-11e9-bd59-d3d87073bc1b",
+		"aa4aede0-94cb-11e9-8389-75e9016b6bcc" ],
+		"object_desc": "test desc edit222222",
+		"tags": [ "hello3" ],
+		"start_date": 1529434800000,
+		"location": { "latitude": 48.58349081485084, "longitude": 7.740739349043691 },
+		"access": "public",
+		"is_published": "1" 
+	}
+	
+
+}

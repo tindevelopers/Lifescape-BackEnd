@@ -1,0 +1,19 @@
+{
+	"body":
+		{
+			"thread_type":"test",
+			"thread_name":"Chandra21",
+			"thread_desc": "This is thread for my office moments",
+			"cover_pic":"http_url_will_here",
+			"privacy":"public"
+			
+		},
+		
+		"path": { 
+			"user_id": "lmNFlFtnq0MaPOvtxkJj79vHk4m2",
+			"thread_id": "e06de170-c658-11e9-ba86-a716e0637e70" ,
+			"test": "840a2af0-3cca-11e9-8870-afbe4ddd3f24" 
+		}
+
+		
+}

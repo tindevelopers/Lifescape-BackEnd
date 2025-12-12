@@ -1,0 +1,11 @@
+{
+		"path": { 
+			"user_id": "lmNFlFtnq0MaPOvtxkJj79vHk4m2",
+			"action": "add"
+		},
+		"body": { 
+			"friend_ids": ["11LDWdUqJFMF60OLOobKRrtHTsH2"],
+			"name":"Group44" ,
+			"desc":"Group6 description" 
+		}
+}

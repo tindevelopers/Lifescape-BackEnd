@@ -1,0 +1,5 @@
+{
+  "authorizationToken": "",
+  "methodArn": "arn:...../*/GET/",
+  "type": "TOKEN"
+}

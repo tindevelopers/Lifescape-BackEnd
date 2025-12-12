@@ -1,0 +1,46 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: LifeScape-ES
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+#  profile: gene
+# you can overwrite defaults here
+  stage: dev
+  region: us-east-1
+  environment:
+    ACCESS_KEY: ${env:AWS_ACCESS_KEY_ID}
+    SECRET_KEY: ${env:AWS_SECRET_ACCESS_KEY}
+    ES_CLOUD_AUTH: admin:Test!123
+    ES_CLOUD_HOST: https://search-lifescape-l5nfd32jewdwtpbyk7qho5uare.us-east-1.es.amazonaws.com
+  iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - s3:*
+      - dynamodb:*
+    Resource: "*"
+  
+functions:
+  es_createindex:
+    handler: user.es_createindex
+  es_add:
+    handler: user.es_add
+  es_search:
+    handler: user.es_search
+ 

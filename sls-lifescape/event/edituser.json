@@ -1,0 +1,33 @@
+{
+	"principalId":"NMML7x8vEmcr1BIZEfPUIiGgIXY2",
+		"path": { 
+			"user_id": "NMML7x8vEmcr1BIZEfPUIiGgIXY2"
+		},
+		"body1": { 
+			  "email" : "vijay.amin.niti@gmail.com",
+			  "name" : "TEST222222 Edit",
+			  "spoken_lang" : "Vijay Edit",
+			  "latitude" : 23,
+			  "longitude" : 73,
+			  "about_text" : "about_text TEXT",
+			  "mobile_no" : "9999999999",
+			  "landline_no" : "99999999999",
+			  "gender" : "male",
+			  "profile_picture" : "httpurl",
+			  "social_profiles" : {}
+		},
+		"body":
+			{ 
+				"name": "jaynilpanchal",
+				"email": "jp7854@gmail.com",
+				"spoken_lang": "English",
+				"about_text": "Good!!",
+				"mobile_no": "(456)896-2231",
+				"latitude": 30.71552009999999,
+				"longitude": 30.71552009999999,
+				"gender": "male",
+				"profile_picture": "https://res.cloudinary.com/lifescape/image/upload/v1568799306/angular%20test/wqcdpxtjrhiuphwqf0uu.jpg",
+				"location": "Chandigarh Rd, Sector 43, Chandigarh, India",
+				"social_profiles": {} 
+			}
+}
