@@ -1,0 +1,13 @@
+{
+  "pathParameters": {
+    "object_id": "d6e4c570-d90b-11f0-b569-fd1151b53307"
+  },
+  "requestContext": {
+    "authorizer": {
+      "principalId": "test_user_123"
+    }
+  },
+  "httpMethod": "GET",
+  "path": "/media/{object_id}"
+}
+

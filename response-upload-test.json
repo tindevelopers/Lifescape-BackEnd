@@ -1,0 +1,1 @@
+{"statusCode":200,"headers":{"Content-Type":"application/json","Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"Content-Type,Authorization","Access-Control-Allow-Methods":"GET,POST,PUT,DELETE,OPTIONS"},"body":"{\"message\":\"Media Data saved successfully!\",\"body\":{\"media_id\":\"7fa65440-d90b-11f0-b333-7bda32d80449\"}}"}

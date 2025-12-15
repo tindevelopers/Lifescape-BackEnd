@@ -1,0 +1,11 @@
+{
+  "body": "{\"user_id\":\"test_user_123\",\"image\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==\",\"media_desc\":\"Test image upload\",\"folder\":\"angular_sample\",\"tags\":[\"test\",\"moment\"]}",
+  "pathParameters": {},
+  "requestContext": {
+    "authorizer": {
+      "principalId": "test_user_123"
+    }
+  },
+  "httpMethod": "POST",
+  "path": "/media/upload"
+}

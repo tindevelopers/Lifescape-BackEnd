@@ -1,0 +1,12 @@
+{
+  "body": "{\"user_id\":\"test_user_123\",\"thread_id\":\"1\",\"brand_id\":\"1\",\"object_title\":\"Test Moment with Uploaded Image\",\"object_desc\":\"Testing the full flow: upload image, create moment, retrieve images\",\"moment_link\":\"\",\"media_id\":[\"cc43d2f0-d90b-11f0-8b01-17b780c38cb2\"],\"post_to_social\":[],\"start_date\":1765730513000,\"access\":\"Public\",\"is_published\":\"1\",\"tags\":[\"test\",\"upload\"]}",
+  "pathParameters": {},
+  "requestContext": {
+    "authorizer": {
+      "principalId": "test_user_123"
+    }
+  },
+  "httpMethod": "POST",
+  "path": "/moment"
+}
+
