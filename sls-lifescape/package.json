@@ -23,5 +23,8 @@
     "serverless-plugin-split-stacks": "^1.9.1",
     "serverless-reqvalidator-plugin": "^1.0.3",
     "url-exists": "^1.0.3"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0"
   }
 }
