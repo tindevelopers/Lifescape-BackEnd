@@ -5,7 +5,7 @@ const AWS = require('aws-sdk');
 var uuid = require('uuid');
 
 var momentob = require('./lib/model/moment.js');
-var firebaseuserob = require('./lib/model/firebase-user.js');
+var userob = require('./lib/model/user.js');
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
@@ -35,8 +35,7 @@ module.exports.save = (event, context, callback) => {
         if(typeof(data.user_id) != "undefined" && data.user_id != "")  
         {
           //Capture User Detail
-          let user_detail = await firebaseuserob.getUserDetail(data.user_id);
-          firebaseuserob.firebasedelete();
+          let user_detail = await userob.getUserDetail(data.user_id);
           
           if(Object.keys(user_detail).length > 0){
             if(user_detail.profile_picture != "")
@@ -127,7 +126,7 @@ module.exports.getMomentLatestComments = (event, context, callback) => {
                           item.created_datetime = new Date(item.created_datetime);
                           
                           
-                          let user_detail = await firebaseuserob.getUserDetail(item.user_id);
+                          let user_detail = await userob.getUserDetail(item.user_id);
                           cnt++;
 
                           if(Object.keys(user_detail).length > 0){
@@ -139,7 +138,6 @@ module.exports.getMomentLatestComments = (event, context, callback) => {
 
                           if(cnt == items.length)
                           {
-                            firebaseuserob.firebasedelete();
                             //console.log(items)
                             resolve(items)
                           }
@@ -225,7 +223,7 @@ module.exports.getMomentComments = (event, context, callback) => {
                       let cnt =0 ;
                       items.forEach(async function(item){
                         
-                        let user_detail = await firebaseuserob.getUserDetail(item.user_id);
+                        let user_detail = await userob.getUserDetail(item.user_id);
                         cnt++;
                         //console.log(user_detail)
 
@@ -237,7 +235,6 @@ module.exports.getMomentComments = (event, context, callback) => {
                         }
 
                         if(cnt == items.length){
-                          firebaseuserob.firebasedelete();
                           callback(null, JSON.stringify(items));
                         }
 

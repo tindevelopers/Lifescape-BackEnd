@@ -12,13 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "@grpc/proto-loader": "^0.5.1",
-    "@sendgrid/mail": "^6.4.0",
     "aws-sdk": "^2.616.0",
-    "firebase": "^7.8.1",
     "grpc": "^1.24.2",
     "mapbox": "^1.0.0-beta10",
     "mysql": "^2.17.1",
-    "sendgrid": "^5.2.3",
     "serverless-aws-documentation": "^1.1.0",
     "serverless-plugin-split-stacks": "^1.9.1",
     "serverless-reqvalidator-plugin": "^1.0.3",

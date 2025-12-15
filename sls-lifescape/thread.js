@@ -6,7 +6,7 @@ var uuid = require('uuid');
 
 var momentob = require('./lib/model/moment.js');
 var mediaob = require('./lib/model/media.js');
-var firebaseuserob = require('./lib/model/firebase-user.js');
+// Firebase removed - var firebaseuserob = require('./lib/model/firebase-user.js');
 var threadob = require('./lib/model/thread.js');
 
 const dynamo = new AWS.DynamoDB.DocumentClient();

@@ -26,7 +26,6 @@ provider:
   stage: dev
   region: us-east-1
   environment:
-    SENDGRID_API_KEY: ${env:SENDGRID_API_KEY}
     SITE_URL: https://my.lifescape.com
     DEFAULT_CHANNEL: "My Lifescape"
     AWS_REGIONNAME: us-east-1

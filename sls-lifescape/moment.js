@@ -7,8 +7,7 @@ var mediaob = require('./lib/model/media.js');
 var threadob = require('./lib/model/thread.js');
 var mapboxob = require('./lib/model/mapbox.js');
 var activitylog = require('./lib/model/activitylog.js');
-
-var firebaseuserob = require('./lib/model/firebase-user.js');
+var userob = require('./lib/model/user.js');
 
 var uuid = require('uuid');
 
@@ -84,8 +83,7 @@ module.exports.createMoment = (event, context, callback) => {
 
       if(data.user_id && data.user_id != "")  
       {
-        var user_detail = await firebaseuserob.getUserDetail(data.user_id);
-        firebaseuserob.firebasedelete();
+        var user_detail = await userob.getUserDetail(data.user_id);
 
         if(Object.keys(user_detail).length > 0){
           if(user_detail.profile_picture != "")
@@ -153,8 +151,7 @@ module.exports.createMoment = (event, context, callback) => {
             });
         }
 
-        let friends_arr =  await firebaseuserob.getUserFriendIDs(data.user_id);
-        firebaseuserob.firebasedelete();
+        let friends_arr = await userob.getUserFriendIDs(data.user_id);
 
 
         if(friends_arr.length > 0)
@@ -782,13 +779,12 @@ module.exports.getUserWall = (event, context, callback) => {
         if(event.principalId ==  user_id && listtype == 'all')
         {
           //Get User Friend Lists
-          var friends_arr = await firebaseuserob.getUserFriendDetails(user_id);
+          var friends_arr = await userob.getUserFriendDetails(user_id);
         }else
         {
           var friends_arr = [];
-          friends_arr[user_id] = await firebaseuserob.getUserDetail(user_id);
+          friends_arr[user_id] = await userob.getUserDetail(user_id);
         }
-        firebaseuserob.firebasedelete();
         
         let userMomentList = await momentob.getUserMomentScanList(Object.keys(friends_arr), LastEvaluatedKey, page_rec);
 
@@ -1023,7 +1019,7 @@ module.exports.searchGlobal = (event, context, callback) => {
 
         //search from People
         let user_arr = [];
-        let user_data = await firebaseuserob.searchUsers(keyword);
+        let user_data = await userob.searchUsers(keyword);
 
         let cnt = 0;
         if(user_data && user_data.length > 0){
@@ -1031,13 +1027,13 @@ module.exports.searchGlobal = (event, context, callback) => {
           user_data.forEach(async (item) => {
 
               //Get Search User's Status as Friend
-              let friendstatus = await firebaseuserob.getUserFriendManageStatus(user_id, item.user_id);
+              let friendstatus = await userob.getUserFriendManageStatus(user_id, item.user_id);
               item.friendrequest = friendstatus
               cnt++;
 
               if(cnt == user_data.length)
               {
-                firebaseuserob.firebasedelete();
+                // Firebase removed - firebaseuserob.firebasedelete();
                 main_arr['users'] = user_data;
                 resolve(main_arr);
               }

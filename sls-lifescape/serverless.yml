@@ -13,20 +13,23 @@
 
 service: LifeScape
 
+# Serverless.com Platform configuration
+org: informationnetwork
+app: lifescape-backend
+
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 frameworkVersion: ">=3.0.0"
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs18.x
   versionFunctions: false  
   profile: lifescape
 # you can overwrite defaults here
   stage: prod
   region: us-east-1
   environment:
-    SENDGRID_API_KEY: ${env:SENDGRID_API_KEY}
     SITE_URL: https://my.lifescape.com
     DEFAULT_CHANNEL: "My Lifescape"
     AWS_REGIONNAME: us-east-1
@@ -54,7 +57,7 @@ allowed-headers:
 plugins:
   - serverless-plugin-split-stacks
   - serverless-reqvalidator-plugin
-  - serverless-aws-documentation
+  # - serverless-aws-documentation  # Temporarily disabled - documentation properties removed
 
 functions:
 
@@ -77,7 +80,6 @@ functions:
             requestModels:
               "application/json": createThreadRequest
 
-          reqValidatorName: onlyBody
 
           response:
             template: $input.path('$')
@@ -98,8 +100,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   editThread:
     handler: thread.edit
@@ -120,7 +120,6 @@ functions:
             #requestModels:
             #  "application/json": createThreadRequest
 
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -141,8 +140,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   getThread:
     handler: thread.get
@@ -166,7 +163,6 @@ functions:
             summary: "Get User's Thread"
             description: "Get User's Thread"
 
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -187,8 +183,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   deleteThread:
     handler: thread.delete
@@ -217,7 +211,6 @@ functions:
             summary: "Delete a Thread"
             description: "Delete a Thread"
 
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -238,8 +231,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   addRemoveFavouriteThread:
     handler: thread.addRemoveFavouriteThread
@@ -271,7 +262,6 @@ functions:
             summary: "Add/Remove Thread from Favourite List"
             description: "Add/Remove Thread from Favourite List"
 
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -292,8 +282,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   getThreads:
     handler: thread.getThreads
@@ -319,7 +307,6 @@ functions:
             summary: "Get User's Threads"
             description: "Get User's Threads"
 
-          # reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -340,8 +327,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   getPublicThreads:
     handler: thread.getThreads
@@ -377,8 +362,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   searchPublicThreadsByKeyword:
     handler: thread.getThreads
@@ -414,8 +397,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   searchUserThread:
     handler: thread.searchUserThread
@@ -440,7 +421,6 @@ functions:
             summary: "Search User's Thread"
             description: "Search User's Thread"
 
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -461,8 +441,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   getUserThreadsMedias:
     handler: thread.getUserThreadsMedias
@@ -486,7 +464,6 @@ functions:
             summary: "Get User's Threads Medias"
             description: "Get User's Threads Medias"
 
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -507,8 +484,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
  
   createMoment:
@@ -532,7 +507,6 @@ functions:
           integration: lambda
 
  
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -553,8 +527,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   editMoment:
     handler: moment.editMoment
@@ -575,7 +547,6 @@ functions:
             requestModels:
               "application/json": editMomentRequest
 
-          reqValidatorName: onlyBody  
           response:
             template: $input.path('$')
             statusCodes:
@@ -595,8 +566,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   editMomentBlockStatus:
     handler: moment.editMomentBlockStatus
@@ -617,7 +586,6 @@ functions:
             # requestModels:
             #   "application/json": editMomentRequest
 
-#          reqValidatorName: onlyBody  
           response:
             template: $input.path('$')
             statusCodes:
@@ -637,8 +605,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   deleteMoment:
     handler: moment.deleteMoment
@@ -686,8 +652,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-            - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
   getMomentDetail:
     handler: moment.getMomentDetail
@@ -728,8 +692,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-            - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
 
   getMomentDetailNew:
@@ -778,8 +740,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-            - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
 
   inviteUsersToObject:
@@ -825,8 +785,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
 
   searchGlobal:
     handler: moment.searchGlobal
@@ -846,7 +804,6 @@ functions:
             summary: "Search People, Moments, Locations"
             description: "Search People, Moments, Locations"
 
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -867,8 +824,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
 
   getObjects:
     handler: moment.getObjects
@@ -888,7 +843,6 @@ functions:
             summary: "Get User's Object Data with Full Detail"
             description: "Get User's Object Data with Full Detail"
 
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -909,8 +863,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
 
   getPublicObjects:
     handler: moment.getObjects
@@ -926,7 +878,6 @@ functions:
             summary: "Get Public Object Data with Full Detail"
             description: "Get Public Object Data with Full Detail"
 
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -947,8 +898,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
 
   saveMedia:
     handler: media.saveMedia
@@ -969,7 +918,6 @@ functions:
             requestModels:
               "application/json": mediaRequest
 
-          reqValidatorName: onlyBody  
           response:
             template: $input.path('$')
             statusCodes:
@@ -989,8 +937,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
 
   saveMedias:
     handler: media.saveMedias
@@ -1011,7 +957,6 @@ functions:
 #            requestModels:
 #              "application/json": mediaRequest
 
-          reqValidatorName: onlyBody  
           response:
             template: $input.path('$')
             statusCodes:
@@ -1031,8 +976,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
 
   # saveMedia:
   #   handler: media.saveMedia
@@ -1053,7 +996,6 @@ functions:
   #           requestModels:
   #             "application/json": mediaRequest
 
-  #         reqValidatorName: onlyBody  
   #         response:
   #           template: $input.path('$')
   #           statusCodes:
@@ -1073,8 +1015,6 @@ functions:
   #                   headers:
   #                     Content-Type: "'application/json'"
 
-  #         methodResponses:
-  #             - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
 
   getMedias:
     handler: media.getMedias
@@ -1093,7 +1033,6 @@ functions:
             summary: "get Moment Medias"
             description: "get Moment Medias"
 
-          reqValidatorName: onlyBody  
           response:
             template: $input.path('$')
             statusCodes:
@@ -1113,8 +1052,6 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
 
   saveMomentLikes:
     handler: moment.saveMomentLikes
@@ -1135,7 +1072,6 @@ functions:
             requestModels:
               "application/json": likemomentRequest
 
-          reqValidatorName: onlyBody  
           response:
             template: $input.path('$')
             statusCodes:
@@ -1150,7 +1086,6 @@ functions:
                   headers:
                     Content-Type: "'application/json'"
 
-          methodResponses:
             statusCode: '404'
             responseModels:
               "application/json": 400JsonResponse
@@ -1172,7 +1107,6 @@ functions:
             summary: "get Moment's Like/Dislike Counter"
             description: "get Moment's Like/Dislike Counter"
 
-          reqValidatorName: onlyBody  
 
           response:
             template: $input.path('$')
@@ -1193,2311 +1127,26 @@ functions:
                     headers:
                       Content-Type: "'application/json'"
 
-          methodResponses:
-            - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
 
-  getUserFriendStatus:
-    #handler: user.getUserFriends
-    handler: firebase-client-user.getUserFriendStatus
-    events:
-      - http:
-          path: /user/{user_id}/friend/{to_user_id}/status
-          method: GET
-          cors: true
-          integration: lambda
-
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Get User Friends"
-            description: "Get User Friends"
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-            - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
-
-  getUserFriendList:
-    #handler: user.getUserFriends
-    handler: firebase-client-user.getUserFriendList
-    events:
-      - http:
-          path: /user/{user_id}/friends
-          method: GET
-          cors: true
-          integration: lambda
-
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Get User Friends"
-            description: "Get User Friends"
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-            - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
-
-
-  getUserSuggestedFriends:
-    handler: firebase-client-user.getUserSuggestedFriends
-    events:
-      - http:
-          path: /user/{user_id}/friends/suggested
-          method: GET
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Get User Suggested Friends"
-            description: "Get User Suggested Friends"
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-            - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
-
-  getUserWall:
-    handler: moment.getUserWall
-    timeout: 20
-    events:
-      - http:
-          path: /user/{user_id}/wall
-          method: POST
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Get User Wall"
-            description: "Get User Wall"
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-            - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
-
-  getRecentMomentsByTime:
-    handler: user.getRecentMomentsByTime
-    timeout: 30
-    events:
-      - http:
-          path: /user/{user_id}/getRecentMoments/{byTime}
-          method: POST
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-                byTime: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Get User Recent Moments"
-            description: "Get User Recent Moments"
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-            - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
-
-  getTimeMatrixMoments:
-    handler: user.getTimeMatrixMoments
-    timeout: 30
-    events:
-      - http:
-          path: /user/{user_id}/getTimeMatrixMoments/{byTime}
-          method: POST
-          cors: true
-          integration: lambda
-          timeout: 60
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Get User Time Matrix Moments"
-            description: "Get User Time Matrix Moments"
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-            - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
-
-  getRecentMoments:
-    handler: user.getRecentMoments
-    events:
-      - http:
-          path: /user/{user_id}/getRecentMoments
-          method: GET
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Get User Recent Moments"
-            description: "Get User Recent Moments"
-
-          reqValidatorName: onlyBody  
-          
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  addRecentMoment:
-    handler: user.addRecentMoment
-    events:
-      - http:
-          path: /user/{user_id}/moment/{object_id}/addRecentMoment
-          method: GET
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Add User Recently Viewer Moment Log"
-            description: "Add User Recently Viewer Moment Log"
-
-          reqValidatorName: onlyBody  
-          
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  getPlaces:
-    handler: user.getPlaces
-    events:
-      - http:
-          path: /user/{user_id}/places
-          method: POST
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Get User Places and Related Moments"
-            description: "Get User Places and Related Moments"
-
-          reqValidatorName: onlyBody  
-          
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  saveTags:
-    handler: moment.saveTags
-    events:
-      - http:
-          path: /moment/{object_id}/tags
-          method: POST
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                object_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Save User's tags for Moment"
-            description: "Save User's tags for Moment"
-            requestModels:
-              "application/json": saveTagsRequest
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  getMomentTags:
-    handler: moment.getMomentTags
-    events:
-      - http:
-          path: /moment/{object_id}/tags
-          method: GET
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                object_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Get Moment Tags"
-            description: "Get Moment Tags"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  deleteTags:
-    handler: moment.deleteTags
-    events:
-      - http:
-          path: /moment/{object_id}/tag/{tag}
-          method: DELETE
-          cors: true
-          integration: lambda
-
-          authorizer:
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                tag_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Delete User's tags for Moment"
-            description: "Delete User's tags for Moment"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                      
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  saveComment:
-    handler: comment.save
-    events:
-      - http:
-          path: /moment/{object_id}/comment
-          method: POST
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                object_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Save User's Comment for Moment"
-            description: "Save User's Comment for Moment"
-            requestModels:
-              "application/json": saveCommentRequest
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-
-  getMomentComments:
-    handler: comment.getMomentComments
-    events:
-      - http:
-          path: /moment/{object_id}/comment
-          method: GET
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                object_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Get Comment List for Moment"
-            description: "Get Comment List for Moment"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-
-  getMomentLatestComments:
-    handler: comment.getMomentLatestComments
-    events:
-      - http:
-          path: /user/{user_id}/moment/{object_id}/comment
-          method: POST
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                object_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Get Latest Comment List for Moment"
-            description: "Get Latest Comment List for Moment"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-
-  inviteFriendByEmail:
-    handler: user.inviteFriendByEmail
-    events:
-      - http:
-          path: /user/{user_id}/friend/invite
-          method: POST
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "User Send Friend Invitation"
-            description: "User Send Friend Invitation"
-            requestModels:
-              "application/json": inviteFriendRequest
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  sendFriendRequest:
-    handler: firebase-client-user.sendFriendRequest
-    events:
-      - http:
-          path: /user/{user_id}/friend/{to_user_id}
-          method: GET
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-                friend_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "User Send Friend Request"
-            description: "User Send Friend Request"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  unFriendUser:
-    handler: firebase-client-user.unFriendUser
-    events:
-      - http:
-          path: /user/{user_id}/friend/{to_user_id}
-          method: DELETE
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-                friend_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Remove user from Friend List"
-            description: "Remove user from Friend List"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  actOnFriendRequest:
-    handler: firebase-client-user.actOnFriendRequest
-    events:
-      - http:
-          path: /user/{user_id}/friend/{to_user_id}/{action}
-          method: GET
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-                friend_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Accept/Deny Friendship Request"
-            description: "Accept/Deny Friendship Request"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  listRequests:
-    handler: firebase-client-user.listRequests
-    events:
-      - http:
-          path: /user/{user_id}/requests/{type}
-          method: GET
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-                friend_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "List User's Received Friend Requests"
-            description: "List User's Received Friend Requests"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-
-  deleteComment:
-    handler: comment.delete
-    events:
-      - http:
-          path: /comment/{comment_id}
-          method: DELETE
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                comment_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Delete User's Comment for Moment"
-            description: "Delete User's Comment for Moment"
-
-          #reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"message":"server_error".*' # JSON response
-                    template: $input.path("$.errorMessage") # JSON return object
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"message":"not_found".*' # JSON response
-                    template: $input.path("$.errorMessage") # JSON return object
-                    headers:
-                      Content-Type: "'application/json'"
-
-          #methodResponses:
-          #    - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  signup:
-    handler: firebase-client-user.signup
-    timeout: 20
-    events:
-      - http:
-          path: /user/signup
-          method: POST
-          cors: true
-          integration: lambda
-           
-
-          documentation:
-            summary: "Create New User"
-            description: "Create New User"
-            requestModels:
-              "application/json": saveUserRequest
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  editProfile:
-    handler: firebase-client-user.editProfile
-    timeout: 20
-    events:
-      - http:
-          path: /user/{user_id}
-          method: PATCH
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Edit User Profile"
-            description: "Edit User Profile"
-            requestModels:
-              "application/json": editUserRequest
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
-
-  editProfilePicture:
-    handler: firebase-client-user.editProfile
-    events:
-      - http:
-          path: /user/{user_id}/uploadphoto
-          method: PATCH
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Edit User Profile Picture"
-            description: "Edit User Profile Picture"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  createUserGroup:
-    handler: firebase-client-user-group.createUserGroup
-    events:
-      - http:
-          path: /user/{user_id}/group
-          method: POST
-          cors: true
-          integration: lambda
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Create a User Group"
-            description: "Create a User Group"
-            requestModels:
-              "application/json": createUserGroupRequest
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  editUserGroup:
-    handler: firebase-client-user-group.editUserGroup
-    events:
-      - http:
-          path: /user/{user_id}/group
-          method: PATCH
-          cors: true
-          integration: lambda
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Edit a User Group"
-            description: "Edit a User Group"
-            requestModels:
-              "application/json": createUserGroupRequest
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  deleteUserGroup:
-    handler: firebase-client-user-group.deleteUserGroup
-    events:
-      - http:
-          path: /user/{user_id}/group/{name}
-          method: DELETE
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Delete a User Group"
-            description: "Delete a User Group"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  getUserGroups:
-    handler: firebase-client-user-group.getUserGroups
-    events:
-      - http:
-          path: /user/{user_id}/group
-          method: GET
-          cors: true
-          integration: lambda
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Get User Groups"
-            description: "Get User Groups"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  getUserGroupFriends:
-    handler: firebase-client-user-group.getUserGroupFriends
-    events:
-      - http:
-          path: /user/{user_id}/group/{name}
-          method: GET
-          cors: true
-          integration: lambda
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Get User Groups"
-            description: "Get User Groups"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  resetPassword:
-    handler: firebase-client-user.resetPassword
-    events:
-      - http:
-          path: /user/resetPassword
-          method: POST
-          cors: true
-          integration: lambda          
-  
-          documentation:
-            summary: "Reset Password"
-            description: "Reset Password"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  changePassword:
-    handler: firebase-client-user.changePassword
-    events:
-      - http:
-          path: /user/{user_id}/changePassword
-          method: PATCH
-          cors: true
-          integration: lambda
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Change User Password"
-            description: "Change User Password"
-            requestModels:
-              "application/json": changePasswordRequest
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                401:
-                    pattern: '.*"statusCode":401.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-
-  login:
-    handler: firebase-client-user.login
-    timeout: 20
-    events:
-      - http:
-          path: /user/login
-          method: POST
-          cors: true
-          integration: lambda
-  
-          documentation:
-            summary: "Login User with email and password"
-            description: "Login User with email and password"
-            requestModels:
-              "application/json": loginUserRequest
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                401:
-                    pattern: '.*"statusCode":401.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-
-  getUserDetail:
-    handler: firebase-client-user.getUserDetail
-    events:
-      - http:
-          path: /user/{user_id}
-          method: GET
-          cors: true
-          integration: lambda
-          
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          request:
-            parameters:
-              paths:
-                user_id: 
-                  required: true
-                  type: string
-
-          documentation:
-            summary: "Get User Detail"
-            description: "Get User Detail"
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-#   createOneallUser:
-#     handler: oneall.createOneallUser
-#     events:
-#       - http:
-#           path: /user/{user_id}/oneall/createUser
-#           method: POST
-#           cors: true
-#           integration: lambda
-          
-#           authorizer: 
-#             arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-#             resultTtlInSeconds: 0
-
-#           request:
-#             parameters:
-#               paths:
-#                 user_id: 
-#                   required: true
-#                   type: string
-
-#           documentation:
-#             summary: "Register User Token"
-#             description: "Register User Token"
-#             requestModels:
-#               "application/json": oneallNewUserRequest
-
-#           reqValidatorName: onlyBody
-#           response:
-#             template: $input.path('$')
-#             statusCodes:
-#                 500:
-#                     pattern: '.*"statusCode":500.*' # JSON response
-#                     template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-#                     headers:
-#                       Content-Type: "'application/json'"
-#                 400:
-#                     pattern: '.*"statusCode":400.*' # JSON response
-#                     template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-#                     headers:
-#                       Content-Type: "'application/json'"
-#                 404:
-#                     pattern: '.*"statusCode":404.*' # JSON response
-#                     template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-#                     headers:
-#                       Content-Type: "'application/json'"
-
-# #          methodResponses:
-# #              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-
-#   shareMoments:
-#     handler: oneall.shareMoments
-#     events:
-#       - http:
-#           path: /user/{user_id}/oneall/moment/share
-#           method: POST
-#           cors: true
-#           integration: lambda
-          
-#           authorizer: 
-#             arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-#             resultTtlInSeconds: 0
-
-#           request:
-#             parameters:
-#               paths:
-#                 user_id: 
-#                   required: true
-#                   type: string
-
-#           documentation:
-#             summary: "Share on oneall social sites"
-#             description: "Share on oneall social sites"
-#           #  requestModels:
-#           #    "application/json": oneallNewUserRequest
-
-#           #reqValidatorName: onlyBody
-
-#           response:
-#             template: $input.path('$')
-#             statusCodes:
-#                 500:
-#                     pattern: '.*"statusCode":500.*' # JSON response
-#                     template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-#                     headers:
-#                       Content-Type: "'application/json'"
-#                 400:
-#                     pattern: '.*"statusCode":400.*' # JSON response
-#                     template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-#                     headers:
-#                       Content-Type: "'application/json'"
-#                 404:
-#                     pattern: '.*"statusCode":404.*' # JSON response
-#                     template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-#                     headers:
-#                       Content-Type: "'application/json'"
-
-# #          methodResponses:
-# #              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
-
-  sendSNSNotificaton:
-    handler: user.sendSNSNotificaton
-
-  updateMediaDatatoMoments:
-    handler: migration.updateMediaDatatoMoments
-
-  updateUserDatatoMoments:
-    handler: moment.updateUserDatatoMoments
-
-
-#   # threadmigration:
-#   #   handler: migration.thread
-
-  updateMomentTitle:
-   handler: moment.updateMomentTitle
-
-  # updateThreadTitle:
-  #  handler: thread.updateThreadTitle
-
-  updateMomentCounter:
-    handler: thread.updateMomentCounter
-  
-  #updateThreadinPermissions:
-  #  handler: thread.updateThreadinPermissions
-
-#   # storeToES:
-#   #   handler: firebase-client-user.storeToES
-
-  # momentmigration:
-  #   handler: migration.moment
-
-  # mediamigration:
-  #   handler: migration.media
-
-  # calcmedia:
-  #   handler: migration.calcmedia
-
-  # flushdata:
-  #   handler: migration.flushdata
-
-  registerDeviceID:
-    handler: firebase-client-user.registerDeviceID
-    events:
-      - http:
-          path: /user/{user_id}/registerDeviceID
-          method: post
-          cors: true
-          integration: lambda  
-
-          authorizer: 
-            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
-            resultTtlInSeconds: 0
-
-          documentation:
-            summary: "Register Device ID"
-            description: "Register Device ID"
-
-          reqValidatorName: onlyBody  
-
-          response:
-            template: $input.path('$')
-            statusCodes:
-                500:
-                    pattern: '.*"statusCode":500.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                400:
-                    pattern: '.*"statusCode":400.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-                404:
-                    pattern: '.*"statusCode":404.*' # JSON response
-                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
-                    headers:
-                      Content-Type: "'application/json'"
-
-          methodResponses:
-              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}
-
-
-
-custom:
-  documentation:
-    models:
-
-      - name: createMomentRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - user_id
-            - object_title
-#            - brand_id
-#            - thread_id
-            - start_date
-            - access
-            - is_published
-
-          properties:
-            user_id:
-              type: string
-            friend_ids:
-              type: array
-              items: 
-                type: string
-            brand_id:
-              type: string
-            location:
-              type: object
-            object_title:
-              type: string
-            object_desc:
-              type: string
-            start_date:
-              type: number
-            access:
-              type: string
-            is_published:
-              type: string
-
-      - name: mediaRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - user_id
-            - cloudinary_url
-            - media_ext
-            - media_type
-            - media_size
-
-          properties:
-            user_id:
-              type: string
-            cloudinary_url:
-              type: string
-            media_ext:
-              type: string
-            media_type:
-              type: string
-            media_desc:
-              type: string
-            media_width:
-              type: number
-            media_height:
-              type: number
-            media_size:
-              type: string
-            cloudinary_id:
-              type: string
-
-      - name: editMomentRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - object_title
-            - start_date
-            - access
-            - is_published
-
-          properties:
-            friend_ids:
-              type: array
-              items: 
-                type: string
-            brand_id:
-              type: string
-            object_title:
-              type: string
-            object_desc:
-              type: string
-            start_date:
-              type: number
-            end_date:
-              type: number
-            access:
-              type: string
-            is_published:
-              type: string
-            moment_link:
-              type: string
-
-      - name: createThreadRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - thread_name
-            - user_id
-
-          properties:
-            user_id:
-              type: string
-            thread_name:
-              type: string
-            thread_desc:
-              type: string
-            thread_type:
-              type: string
-            cover_pic:
-              type: string
-            privacy:
-              type: string                                          
-
-      - name: likemomentRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - user_id
-            - like
-
-          properties:
-            user_id:
-              type: string
-            like:
-              type: number
-
-      - name: oneallNewUserRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - provider
-            - access_token
-
-          properties:
-            provider:
-              type: string
-            access_token:
-              type: object
-
-
-      - name: saveTagsRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - user_id
-            - tags
-
-          properties:
-            user_id:
-              type: string
-
-      - name: createUserGroupRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - name
-
-          properties:
-            name:
-              type: string
-            desc:
-              type: string
-            friend_ids:
-              type: array
-              items: 
-                type: string
-
-
-      - name: 200JsonResponse
-        contentType: "application/json"
-        schema:
-          type: object
-          properties:
-            message:
-              type: string
-            # body:
-            #   type: object
-            #   properties:
-            #     object_id:
-            #       type: string
-
-      - name: 400JsonResponse
-        contentType: "application/json"
-        schema:
-          type: object
-          properties:
-            message:
-              type: string
-            statusCode:
-              type: number        
-
-
-      - name: inviteFriendRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - to_email
-          properties:
-            to_email:
-              type: array
-
-      - name: loginUserRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - email
-            - password
-            
-          properties:
-            email:
-              type: string
-            password:
-              type: string
-
-      - name: saveUserRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - email
-            - password
-            - name
-            
-          properties:
-            email:
-              type: string
-            password:
-              type: string
-            name:
-              type: string  
-
-      - name: changePasswordRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - email
-            - old_password
-            - new_password
-            
-          properties:
-            email:
-              type: string
-            old_password:
-              type: string
-            new_password:
-              type: string  
-
-      - name: editUserRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - name
-            - profile_picture
-            - about_text
-            - mobile_no
-            - gender
-            
-          properties:
-            profile_picture:
-              type: string
-            name:
-              type: string  
-            latitude:
-              type: number
-            longitude:
-              type: number
-            about_text:
-              type: string
-            mobile_no:
-              type: string
-            gender:
-              type: string
-            oneall_user_token:
-              type: string
-
-      - name: saveCommentRequest
-        contentType: "application/json"
-        schema:
-          required: 
-            - user_id
-            - comment_text
-            
-          properties:
-            user_id:
-              type: string
-            comment_text:
-              type: string
-
-  commonModelSchemaFragments:
-
-    MethodResponse400Json:
-      statusCode: '400'
-      responseModels:
-        "application/json": 400JsonResponse
-
-      # 500:
-      #     pattern: '.*"message":"server_error".*' # JSON response
-      #     template: $input.path("$.errorMessage") # JSON return object
-      #     headers:
-      #       Content-Type: "'application/json'"
-
-resources:
-  Resources:
-    onlyBody:  
-      Type: "AWS::ApiGateway::RequestValidator"
-      Properties:
-        Name: 'only-body'
-        RestApiId: 
-          Ref: ApiGatewayRestApi
-        ValidateRequestBody: true
-        ValidateRequestParameters: false
-
-#     # Thread:
-#     #   Type: AWS::DynamoDB::Table
-#     #   Properties:
-#     #     TableName: Thread
-#     #     AttributeDefinitions:
-#     #       - AttributeName: thread_id
-#     #         AttributeType: S
-#     #     KeySchema:
-#     #       - AttributeName: thread_id
-#     #         KeyType: HASH
-
-#     #     # GlobalSecondaryIndexes:
-#     #     #   - IndexName: user_id-created_datetime-index
-#     #     #     KeySchema:
-#     #     #       - AttributeName: user_id
-#     #     #         KeyType: HASH
-#     #     #       - AttributeName: created_datetime
-#     #     #         KeyType: RANGE
-#     #     #     Projection:
-#     #     #       ProjectionType: "ALL"
-#     #     #     ProvisionedThroughput:
-#     #     #       ReadCapacityUnits: 1
-#     #     #       WriteCapacityUnits: 1
-#     #     ProvisionedThroughput:
-#     #           ReadCapacityUnits: 1
-#     #           WriteCapacityUnits: 1
-#     #     StreamSpecification:
-#     #       StreamViewType: KEYS_ONLY   
-
-#     # DatalineObject:
-#     #   Type: AWS::DynamoDB::Table
-#     #   Properties:
-#     #     TableName: DatalineObject
-#     #     AttributeDefinitions:
-#     #       - AttributeName: datalineobject_id
-#     #         AttributeType: S
-#     #       # - AttributeName: user_id
-#     #       #   AttributeType: S
-#     #       # - AttributeName: created_datetime
-#     #       #   AttributeType: N
-
-#     #     KeySchema:
-#     #       - AttributeName: datalineobject_id
-#     #         KeyType: HASH
-
-#     #     # GlobalSecondaryIndexes:
-#     #     #   - IndexName: user_id-created_datetime-index
-#     #     #     KeySchema:
-#     #     #       - AttributeName: user_id
-#     #     #         KeyType: HASH
-#     #     #       - AttributeName: created_datetime
-#     #     #         KeyType: RANGE
-#     #     #     Projection:
-#     #     #       ProjectionType: "ALL"
-#     #     #     ProvisionedThroughput:
-#     #     #       ReadCapacityUnits: 1
-#     #     #       WriteCapacityUnits: 1
-
-#     #     ProvisionedThroughput:
-#     #           ReadCapacityUnits: 1
-#     #           WriteCapacityUnits: 1
-#     #     StreamSpecification:
-#     #       StreamViewType: KEYS_ONLY
-
-#     # Media:
-#     #   Type: AWS::DynamoDB::Table
-#     #   Properties:
-#     #     TableName: Media
-#     #     AttributeDefinitions:
-#     #       - AttributeName: media_id
-#     #         AttributeType: S
-#     #       - AttributeName: created_datetime
-#     #         AttributeType: N
-#     #       - AttributeName: datalineobject_id
-#     #         AttributeType: S
-
-#     #     KeySchema:
-#     #       - AttributeName: media_id
-#     #         KeyType: HASH
-
-#     #     GlobalSecondaryIndexes:
-#     #       - IndexName: datalineobject_id-created_datetime-index
-#     #         KeySchema:
-#     #           - AttributeName: datalineobject_id
-#     #             KeyType: HASH
-#     #           - AttributeName: created_datetime
-#     #             KeyType: RANGE
-#     #         Projection:
-#     #           ProjectionType: "ALL"
-#     #         ProvisionedThroughput:
-#     #           ReadCapacityUnits: 1
-#     #           WriteCapacityUnits: 1
-
-#     #     ProvisionedThroughput:
-#     #           ReadCapacityUnits: 1
-#     #           WriteCapacityUnits: 1
-#     #     StreamSpecification:
-#     #       StreamViewType: KEYS_ONLY
-
-#     # DatalineObjectLike:
-#     #   Type: AWS::DynamoDB::Table
-#     #   Properties:
-#     #     TableName: DatalineObjectLike
-#     #     AttributeDefinitions:
-#     #       - AttributeName: user_id
-#     #         AttributeType: S
-#     #       - AttributeName: datalineobject_id
-#     #         AttributeType: S
-#     #     KeySchema:
-#     #       - AttributeName: user_id
-#     #         KeyType: HASH
-#     #       - AttributeName: datalineobject_id
-#     #         KeyType: RANGE
-#     #     ProvisionedThroughput:
-#     #           ReadCapacityUnits: 1
-#     #           WriteCapacityUnits: 1
-#     #     StreamSpecification:
-#     #       StreamViewType: KEYS_ONLY
-
-#     # UserRecentViews:
-#     #   Type: AWS::DynamoDB::Table
-#     #   Properties:
-#     #     TableName: UserRecentViews
-#     #     AttributeDefinitions:
-#     #       - AttributeName: user_id
-#     #         AttributeType: S
-#     #       - AttributeName: datalineobject_id
-#     #         AttributeType: S
-#     #     KeySchema:
-#     #       - AttributeName: user_id
-#     #         KeyType: HASH
-#     #       - AttributeName: datalineobject_id
-#     #         KeyType: RANGE
-#     #     ProvisionedThroughput:
-#     #           ReadCapacityUnits: 1
-#     #           WriteCapacityUnits: 1
-#     #     StreamSpecification:
-#     #       StreamViewType: KEYS_ONLY
-
-#     # DatalineObjectComments:
-#     #   Type: AWS::DynamoDB::Table
-#     #   Properties:
-#     #     TableName: DatalineObjectComments
-#     #     AttributeDefinitions:
-#     #       - AttributeName: comment_id
-#     #         AttributeType: S
-#     #       - AttributeName: user_id
-#     #         AttributeType: S
-#     #       - AttributeName: created_datetime
-#     #         AttributeType: N
-#     #       - AttributeName: datalineobject_id
-#     #         AttributeType: S
-
-#     #     KeySchema:
-#     #       - AttributeName: comment_id
-#     #         KeyType: HASH
-
-#     #     GlobalSecondaryIndexes:
-#     #       - IndexName: user_id-created_datetime-index
-#     #         KeySchema:
-#     #           - AttributeName: user_id
-#     #             KeyType: HASH
-#     #           - AttributeName: created_datetime
-#     #             KeyType: RANGE
-#     #         Projection:
-#     #           ProjectionType: "ALL"
-#     #         ProvisionedThroughput:
-#     #           ReadCapacityUnits: 1
-#     #           WriteCapacityUnits: 1
-
-#     #       - IndexName: datalineobject_id-created_datetime-index
-#     #         KeySchema:
-#     #           - AttributeName: datalineobject_id
-#     #             KeyType: HASH
-#     #           - AttributeName: created_datetime
-#     #             KeyType: RANGE
-#     #         Projection:
-#     #           ProjectionType: "ALL"
-#     #         ProvisionedThroughput:
-#     #           ReadCapacityUnits: 1
-#     #           WriteCapacityUnits: 1
-
-#     #     ProvisionedThroughput:
-#     #           ReadCapacityUnits: 1
-#     #           WriteCapacityUnits: 1
-#     #     StreamSpecification:
-#     #       StreamViewType: KEYS_ONLY   
-
-# #     DatalineObjectTags:
-# #       Type: AWS::DynamoDB::Table
-# #       Properties:
-# #         TableName: DatalineObjectTags
-# #         AttributeDefinitions:
-# #           - AttributeName: tag_id
-# #             AttributeType: S
-# # #          - AttributeName: name
-# # #            AttributeType: S
-# #           # - AttributeName: created_datetime
-# #           #   AttributeType: N
-# #           # - AttributeName: datalineobject_id
-# #           #   AttributeType: S
-
-# #         KeySchema:
-# #           - AttributeName: tag_id
-# #             KeyType: HASH
-
-# #         # GlobalSecondaryIndexes:
-# #         #   - IndexName: datalineobject_id-created_datetime-index
-# #         #     KeySchema:
-# #         #       - AttributeName: datalineobject_id
-# #         #         KeyType: HASH
-# #         #       - AttributeName: created_datetime
-# #         #         KeyType: RANGE
-# #         #     Projection:
-# #         #       ProjectionType: "ALL"
-# #         #     ProvisionedThroughput:
-# #         #       ReadCapacityUnits: 1
-# #         #       WriteCapacityUnits: 1
-
-# #         ProvisionedThroughput:
-# #               ReadCapacityUnits: 1
-# #               WriteCapacityUnits: 1
-# #         StreamSpecification:
-# #           StreamViewType: KEYS_ONLY   
-
-# #    The following are a few example events you can configure
-# #    NOTE: Please make sure to change your handler code to work with those events
-# #    Check the event documentation for details
-# #    events:
-# #      - http:
-# #          path: users/create
-# #          method: get
-# #      - s3: ${env:BUCKET}
-# #      - schedule: rate(10 minutes)
-# #      - sns: greeter-topic
-# #      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
-# #      - alexaSkill
-# #      - iot:
-# #          sql: "SELECT * FROM 'some_topic'"
-# #      - cloudwatchEvent:
-# #          event:
-# #            source:
-# #              - "aws.ec2"
-# #            detail-type:
-# #              - "EC2 Instance State-change Notification"
-# #            detail:
-# #              state:
-# #                - pending
-
-# #    Define function environment variables here
-# #    environment:
-# #      variable2: value2
-
-# # you can add CloudFormation resource templates here
-# # resources:
-# #  Resources:
-# #    NewResource:
-# #      Type: AWS::S3::Bucket
-# #      Properties:
-# #        BucketName: my-new-bucket
-# #  Outputs:
-# #     NewOutput:
-# #       Description: "Description for the output"
-# #       Value: "Some output value"
-
-# #Indexing====
-
-# #DatalineObject
-# #thread_id-created_datetime-index
-# #user_id-created_datetime-index
-# #user_id-start_date-index
-# #object_title-created_datetime-index  Not Used
-# #is_published-created_datetime-index
-
-
-
-# #Thread
-# #user_id-created_datetime-index
-
-# #DatalineObjectComments
-# #user_id-created_datetime-index
-# #datalineobject_id-created_datetime-index
-
-# #DatalineObjectTags
-# #datalineobject_id-index
-
-# #Media
-# #datalineobject_id-created_datetime-index
-
-# #Thread
-# #user_id-created_datetime-index
-
-# #UserRecentViews
-# #user_id-created_datetime-index
-
-
-
-
+  # getUserFriendStatus:  # Firebase removed - function disabled
+  # #handler: user.getUserFriends
+  # getUserFriendList:  # Firebase removed - function disabled
+  # #handler: user.getUserFriends
+  # getUserSuggestedFriends:  # Firebase removed - function disabled
+  # sendFriendRequest:  # Firebase removed - function disabled
+  # unFriendUser:  # Firebase removed - function disabled
+  # actOnFriendRequest:  # Firebase removed - function disabled
+  # listRequests:  # Firebase removed - function disabled
+  # signup:  # Firebase removed - function disabled
+  # editProfile:  # Firebase removed - function disabled
+  # editProfilePicture:  # Firebase removed - function disabled
+  # createUserGroup:  # Firebase removed - function disabled
+  # editUserGroup:  # Firebase removed - function disabled
+  # deleteUserGroup:  # Firebase removed - function disabled
+  # getUserGroups:  # Firebase removed - function disabled
+  # getUserGroupFriends:  # Firebase removed - function disabled
+  # resetPassword:  # Firebase removed - function disabled
+  # changePassword:  # Firebase removed - function disabled
+  # login:  # Firebase removed - function disabled
+  # getUserDetail:  # Firebase removed - function disabled
+  # registerDeviceID:  # Firebase removed - function disabled

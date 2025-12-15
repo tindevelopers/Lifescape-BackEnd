@@ -6,7 +6,7 @@ var uuid = require('uuid');
 
 var momentob = require('./lib/model/moment.js');
 var threadob = require('./lib/model/thread.js');
-var firebaseuserob = require('./lib/model/firebase-user.js');
+var userob = require('./lib/model/user.js');
 var object_permissions = require('./lib/model/object_permissions.js');
 var snsob = require('./lib/model/sns.js');
 
@@ -1273,46 +1273,35 @@ module.exports.inviteFriendByEmail = (event, context, callback) => {
       return new Promise(async function(resolve, reject) {
         //Get Sender Detail
         let fromemail = "admin@lifescape.com";
-        let user_detail = await firebaseuserob.getUserDetail(user_id);
-        let res = firebaseuserob.firebasedelete();
+        var userob = require('./lib/model/user.js');
+        let user_detail = await userob.getUserDetail(user_id);
+        let res = null;
 
         let username = user_detail.displayName;
         if(user_detail.email)
           fromemail = user_detail.email;
 
-        //Send Mail through SendGrid API
-        const sgMail = require('@sendgrid/mail');
-
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-        // const msg = {
-        //   to: to_email,
-        //   from: fromemail,
-        //   subject: 'Live your life to the fullest and share your story with LifeScape',
-        //   text: 'Hi,\r\n' + username +' has invited you to join Lifescape and share your experience.\r\nLifeScape… a revolutionary way to view, experience, display and share your life. We make it easy to capture the important moments of your life and place them in context with the people, events and media that enrich and shape your world.\r\nThanks and Regards\r\nLifeScape Team',
-        //   html: 'Hi,<BR><BR>' + username +' has invited you to join Lifescape and share your experience.<BR><BR>' + process.env.SITE_URL + '/register<BR><BR>LifeScape… a revolutionary way to view, experience, display and share your life. We make it easy to capture the important moments of your life and place them in context with the people, events and media that enrich and shape your world.<BR><BR>Thanks and Regards,<BR><BR>LifeScape Team.',
-        // };
-        const msg = {
-          to: to_email,
-          from: fromemail,
-          templateId: 'd-e2885a644ad548968d85b269245cd2c6',
-          dynamic_template_data: {
-            Sender_Name: username
-          },
-
-        };
-        console.log(msg);
+        //Send Mail through AWS SES
+        var sesob = require('./lib/model/ses.js');
         
-        var sendPromise = sgMail.send(msg);
-
-        // Handle promise's fulfilled/rejected states
-        sendPromise.then(
-          function(data) {
-            callback(null,JSON.stringify({ message: "Invitation Sent successfully!"}));
-          }).catch(
-            function(err) {
-            console.error(err, err.stack);
-            return context.fail(JSON.stringify( { statusCode:500, message: "Invitation is not sent successfully!" } ));
-          });
+        var subject = 'Live your life to the fullest and share your story with LifeScape';
+        var textBody = 'Hi,\r\n' + username + ' has invited you to join Lifescape and share your experience.\r\n\r\n' + 
+                      process.env.SITE_URL + '/register\r\n\r\n' +
+                      'LifeScape… a revolutionary way to view, experience, display and share your life. We make it easy to capture the important moments of your life and place them in context with the people, events and media that enrich and shape your world.\r\n\r\n' +
+                      'Thanks and Regards,\r\nLifeScape Team';
+        
+        var htmlBody = 'Hi,<BR><BR>' + username + ' has invited you to join Lifescape and share your experience.<BR><BR>' + 
+                      '<a href="' + process.env.SITE_URL + '/register">' + process.env.SITE_URL + '/register</a><BR><BR>' +
+                      'LifeScape… a revolutionary way to view, experience, display and share your life. We make it easy to capture the important moments of your life and place them in context with the people, events and media that enrich and shape your world.<BR><BR>' +
+                      'Thanks and Regards,<BR><BR>LifeScape Team.';
+        
+        try {
+          var result = await sesob.sendEmail(to_email, fromemail, subject, textBody, htmlBody);
+          callback(null, JSON.stringify({ message: "Invitation Sent successfully!" }));
+        } catch (err) {
+          console.error('SES sendEmail error:', err, err.stack);
+          return context.fail(JSON.stringify({ statusCode: 500, message: "Invitation is not sent successfully!" }));
+        }
       });
     }
     else
@@ -1331,8 +1320,7 @@ module.exports.sendSNSNotificaton = (event, context, callback) => {
     return new Promise(async function(resolve, reject) {
 
       //Get User Detail
-      let user_detail = await firebaseuserob.getUserDetail(user_id);
-      firebaseuserob.firebasedelete();
+      let user_detail = await userob.getUserDetail(user_id);
       
       if(user_detail.devices.ios != "" && user_detail.devices.ios.length > 0 ){
         //sendSNSpushNotification
