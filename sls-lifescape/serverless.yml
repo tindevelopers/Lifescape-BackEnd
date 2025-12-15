@@ -19,7 +19,7 @@ app: lifescape-backend
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
-frameworkVersion: ">=3.0.0"
+frameworkVersion: ">=4.0.0"
 
 provider:
   name: aws
@@ -33,6 +33,8 @@ provider:
     SITE_URL: https://my.lifescape.com
     DEFAULT_CHANNEL: "My Lifescape"
     AWS_REGIONNAME: us-east-1
+    COGNITO_USER_POOL_ID: us-east-1_uFR3CWkSg
+    COGNITO_USER_POOL_CLIENT_ID: 4590eqn44aignshvnci9oo7al7
 
   role: arn:aws:iam::872469723818:role/lifescape-sls-role
   # iamRoleStatements:
