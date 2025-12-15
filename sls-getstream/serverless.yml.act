@@ -1,0 +1,167 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: LifeScape-getStream
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+#  profile: gene
+# you can overwrite defaults here
+  stage: prod
+  region: us-east-1
+  iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - s3:*
+      - dynamodb:*
+    Resource: "*"
+plugins:
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
+functions:
+  user_follow:
+    handler: user.follow
+  user_unfollow:
+    handler: user.unfollow
+  getFollowers:
+    handler: user.getFollowers
+  sendNotification:
+    handler: feed.sendNotification
+  markFlagtoNotification:  
+    handler: feed.markFlagtoNotification
+    events:
+      - http:
+          path: /user/{user_id}/notifications
+          method: PATCH
+          cors: true
+          integration: lambda
+
+          authorizer: 
+            arn: arn:aws:lambda:us-east-1:834616002870:function:Auth-dev-authorizer
+            resultTtlInSeconds: 0
+
+          documentation:
+            summary: "Mark Notification as seen"
+            description: "Mark Notification as seen"
+            requestModels:
+              "application/json": markNotificationRequest
+
+          reqValidatorName: onlyBody  
+
+          request:
+            parameters:
+              paths:
+                user_id: 
+                  required: true
+                  type: string
+
+          response:
+            template: $input.path('$')
+            statusCodes:
+                500:
+                    pattern: '.*"statusCode":500.*' # JSON response
+                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
+                    headers:
+                      Content-Type: "'application/json'"
+                400:
+                    pattern: '.*"statusCode":400.*' # JSON response
+                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
+                    headers:
+                      Content-Type: "'application/json'"
+                404:
+                    pattern: '.*"statusCode":404.*' # JSON response
+                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
+                    headers:
+                      Content-Type: "'application/json'"
+
+#          methodResponses:
+#              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
+
+  getNotifications:
+    handler: feed.getNotifications
+    events:
+      - http:
+          path: /user/{user_id}/notifications
+          method: GET
+          cors: true
+          integration: lambda
+
+          authorizer: 
+            arn: arn:aws:lambda:us-east-1:834616002870:function:Auth-dev-authorizer
+            resultTtlInSeconds: 0
+
+          request:
+            parameters:
+              paths:
+                user_id: 
+                  required: true
+                  type: string
+                friend_id: 
+                  required: true
+                  type: string
+
+          response:
+            template: $input.path('$')
+            statusCodes:
+                500:
+                    pattern: '.*"statusCode":500.*' # JSON response
+                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
+                    headers:
+                      Content-Type: "'application/json'"
+                400:
+                    pattern: '.*"statusCode":400.*' # JSON response
+                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
+                    headers:
+                      Content-Type: "'application/json'"
+                404:
+                    pattern: '.*"statusCode":404.*' # JSON response
+                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
+                    headers:
+                      Content-Type: "'application/json'"
+
+#          methodResponses:
+#              - ${self:custom.commonModelSchemaFragments.MethodResponse400Json}        
+
+custom:
+  documentation:
+    models:
+
+      - name: markNotificationRequest
+        contentType: "application/json"
+        schema:
+          required: 
+            - flag
+            - notification_ids
+          properties:
+            flag:
+              type: string
+            notification_ids:
+              type: array
+              items: 
+                type: string
+resources:
+  Resources:
+    onlyBody:  
+      Type: "AWS::ApiGateway::RequestValidator"
+      Properties:
+        Name: 'only-body'
+        RestApiId: 
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false
+

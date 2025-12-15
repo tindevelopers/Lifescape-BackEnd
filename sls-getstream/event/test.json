@@ -1,0 +1,29 @@
+{
+	"user_id1": "zvrZyrUEqbSJjtq3IDv1uPlOMwh1",
+	"user_id": ["zvrZyrUEqbSJjtq3IDv1uPlOMwh1", "zvrZyrUEqbSJjtq3IDv1uPlOMwh1"],
+	"to_user_id":"FfZSwZijP1M9cdpWLIpu5rR1LD63",
+
+	"body":{
+		"flag":"mark_seen",
+		"notification_ids":["13e6b7e1-caf3-11e9-8080-80014d426d73.13e5abfa-caf3-11e9-8bbe-125a5e7365a8"]
+	},
+	"path":{
+		"user_id":"lmNFlFtnq0MaPOvtxkJj79vHk4m2"
+	},
+
+
+
+"data": 
+{ 
+	"actor": "hdzAO73d39MLKZyGjkwSgUK33Wi1",
+	"verb": "moment_add",
+	"object": "moment:090f4c20-cd86-11e9-999d-0f1743aa81b4",
+	"foreign_id": "moment:090f4c20-cd86-11e9-999d-0f1743aa81b4",
+	"event": 
+	{ 
+		"profile_picture": "http://res.cloudinary.com/lifescape/image/upload/v1567408651/angular%20test/fs9tu65sxcohdg4i0s7b.png",
+		"displayName": "vijay amin" 
+	},
+	"message": "est"
+} 
+}

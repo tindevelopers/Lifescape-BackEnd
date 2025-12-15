@@ -1,0 +1,11 @@
+{
+  "Template": {
+    "TemplateName": "sendReferenceEmailTemplate",
+
+    "SubjectPart": "Live your life to the fullest and share your story with LifeScape",
+
+    "HtmlPart": "Hi,\r\n{{ UserName }} has invited you to join Lifescape and share your experience.\r\nLifeScape… a revolutionary way to view, experience, display and share your life. We make it easy to capture the important moments of your life and place them in context with the people, events and media that enrich and shape your world.\r\nThanks and Regards\r\nLifeScape Team",
+
+    "TextPart": "Hi,\r\n{{ UserName }} has invited you to join Lifescape and share your experience.\r\nLifeScape… a revolutionary way to view, experience, display and share your life. We make it easy to capture the important moments of your life and place them in context with the people, events and media that enrich and shape your world.\r\nThanks and Regards\r\nLifeScape Team"
+  }
+}

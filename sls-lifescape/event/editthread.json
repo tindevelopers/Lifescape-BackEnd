@@ -1,0 +1,18 @@
+{
+	"body":{
+		"thread_order": "1",
+		"thread_type":"test",
+		"mainthread":"1",
+		"is_personal": "1",
+		"user_id": "197",
+		"brand_id":"1",
+		"datalineobject_id":"test",
+		"thread_name":"222222 thread1",
+		"thread_desc": "edit thread1"
+	},
+		
+	"path":{
+		"thread_id": "41f34010-1da9-11e9-a7e2-b3caddf00486",
+		"user_id": "197"
+	}
+}

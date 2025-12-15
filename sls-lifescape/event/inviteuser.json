@@ -1,0 +1,13 @@
+{
+		"principalId":"lmNFlFtnq0MaPOvtxkJj79vHk4m2",
+		"path": { 
+			"user_id": "lmNFlFtnq0MaPOvtxkJj79vHk4m2"
+		},
+		"body": { 
+			"to_user_id": ["hQZ0BKXtnVOANdsSULGOXnoYeQl1"],
+			"object_type": "thread",
+			"object_id": "15c59920-4d82-11ea-a65a-9ba0e189a721",
+			"role": "author"
+		}
+		
+}

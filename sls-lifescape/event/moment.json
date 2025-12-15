@@ -1,0 +1,24 @@
+{
+	"body":
+	{
+			"user_id": "lmNFlFtnq0MaPOvtxkJj79vHk4m2",
+			"thread_id":"015963e0-92a7-11e9-9654-218abf049370",
+			"brand_id":"1",
+			"object_title":"defaultmediatest1",
+			"media_id":["a723fb90-b2ec-11e9-a645-3fad5da8fc3a"],
+			"object_desc":"test desc",
+			"start_date": 1553012135000,
+			"location":{
+				"latitude":23,
+				"longitude":-72
+			},
+			"access":"public",
+			"is_published":"1",
+			"tags":["tag1","tag2"],
+			"post_to_social": ["twitter"]
+},		
+		"path":{
+			"user_id": "lmNFlFtnq0MaPOvtxkJj79vHk4m2",
+			"object_id": "8129f0a0-6a78-11e9-a737-d1b41759c78e"
+		}
+}

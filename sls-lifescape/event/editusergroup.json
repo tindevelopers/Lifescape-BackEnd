@@ -1,0 +1,12 @@
+{
+		"path": { 
+			"user_id": "lmNFlFtnq0MaPOvtxkJj79vHk4m2",
+			"action": "edit"
+		},
+		"body": { 
+			"friend_ids": ["11LDWdUqJFMF60OLOobKRrtHTsH2"],
+			"name":"Group44" ,
+			"new_name":"Group441" ,
+			"desc":"Group44 description edit" 
+		}
+}

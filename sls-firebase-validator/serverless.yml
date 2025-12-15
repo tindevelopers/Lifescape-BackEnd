@@ -1,0 +1,46 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: Auth
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+#  profile: gene
+# you can overwrite defaults here
+  stage: dev
+  environment:
+    firebaseProjectId: "tin-app-db"
+    firebaseClientEmail: "tin-app-db@appspot.gserviceaccount.com"
+    firebasePrivateKey: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJ9Rn17I3atpSs\no2awnLykANG0yPxp0/SnHmUt5GvRWmvOsZssv5fCs39HD29jjTinqUjh7ML3bLrm\n6gRb2BjMW7wUhQZAqFGB8l0yCF7P8c49OIFAM4jjhsItjXKDI9we0csiXzcmm0Lr\nxgEJAr9kPeYKJJ5PPpanDErHcIqG8yo5tAGB7UGtJqKuNWsIL+uATr1bWCrzcVy/\nX+fUT2GHENbUuwtVfniyaC3+CZnccIhmiqJ0jVHZUgvwcpC/abTgLrPhNkRRge/o\nbdNmtNueZGVKiWFV1tbGT0If7U0aB9n3go9CJHDDOY1ypq404z9gzZFl26+TVzN0\nf8jkizoLAgMBAAECggEADsjNog4zgvEIyJacXDjX1R27ka4rpEeq9QJUSobFSdSC\naJA3RDsGY2971Xo7dPXlUYjNWBSwCn2VinVT5Qat0hAJIGtt6L/UWlyha+88REwh\nr/j5+qGLLN+Jnty9pvyyDuOG07kACD3SKVZxGaAaM2lrSg93iLo+kci5lLNta1wy\ndjh69i3b5LNbBt6ZWb4UEkE2VgLtBuzRUpqPCGK+XvQ2dwa1eUKN6Hhpm1k8lwoq\nfbEkaOqlzmjToa+wPmH7peaveJO2uqwXprmZZCjq/Q6RgOBi4YtCJ2QeblFXZjQO\n0dPlg7tOGYqnc1/gaxCnirY3TMEKJ4xTprwHKtvXAQKBgQDp29oLTJSmmHSf3EUr\nJqLBnNy80MRjgenb1OdJsNwuCZIpiDadfKXvPTgX6WP4llSc5tv+k9GvP8aPXByY\nczfP5rdg5S31ToZ+2wEEYjWZzeRZUcufLAcnbc2elYa85nHEK1Cy28tlGj990qzj\n3ovO1mob9QKbnoipJOjVB/PoiwKBgQDdFAp0onmz09Uwdz9nuOL1HbvtMg7b7HEY\n5W0X/wkMBT7Ilps0YXrLJEcvy3bWUOaRYe1incgi0a49NvCk9uWbWEkYXT5BnZvt\n1X28MdF1QQ778KwOXTTjVhvEh2gpUEToHERAajeUmx3Udzo0wa3CpBXEXFuQZPE7\nH1op8D6kgQKBgG3yq0T8sDbTHqG6EdsDwyl78lvjWzHddnGgW01OFXafkVRtciAA\n5pLgGWtEk3fgVc+eyneaT88xEM195QPXx7m7IyQvG7hlPt6NYKEK+2BgaKeFyVIA\nhSyId0/DxSEyxvIP21T7+ViDSq6BSj+n9ds8+45BVwSLOH0tmTnvD0GZAoGAV+HT\nljHQN1AJ+04sAktYzR+YyN2RUpNXEhKBn3xeWEztfEeCQvxNF9vAAJvdDazzOu+2\nsfEO0eiQXv0sBCexdmNOC0Vlrie9CHpJlToojXfjQPuXKc6ba5ObTjCVk3a5LZuu\n9fxDQ+u1m/QZS0eCj1Ey5e/g5jF6Q4pfCTTbcgECgYEA4naZeml5daepI32cRtEH\ntJzdYTHwk8dR3VxbqXralnTI2z2Z7q5buGNNs9LXoyrgGGALGTCXX6mX8Rf6gcEw\nUiyBqA2aPo4Kc4oHgarqJCOpNmuhmtM+unrCLvVURPQaoAJX0KjVF8u5HiWpc6CN\nt8pPIxW0FhruyDkgWJT/z4s=\n-----END PRIVATE KEY-----\n"
+    firebaseUrl: "https://tin-app-db.firebaseio.com"
+    webapikey: "AIzaSyALdrMnBCu4_jPzZV3qAhwq6qL-BzioxbI"
+
+  region: us-east-1
+  iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - s3:*
+      - dynamodb:*
+    Resource: "*"
+
+functions:
+
+  authorizer:
+    handler: firebase-validator.handler
+
