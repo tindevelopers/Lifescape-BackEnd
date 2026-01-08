@@ -39,6 +39,22 @@ module.exports.createMoment = (event, context, callback) => {
             return callback(null, errorResponse);
         }
     }
+    
+    // Validate required fields
+    if (!data || !data.object_title || !data.user_id) {
+        const errorResponse = {
+            statusCode: 400,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+                'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ statusCode: 400, message: "Missing required fields: object_title and user_id" })
+        };
+        return callback(null, errorResponse);
+    }
+    
     console.log(event)
     var id = uuid.v1();//Create Unique ID
 
@@ -99,28 +115,31 @@ module.exports.createMoment = (event, context, callback) => {
       if(data.tags && data.tags != "")
         item_data.tags = data.tags
 
+      // Get user details
+      var user_detail = {};
       if(data.user_id && data.user_id != "")  
       {
-        var user_detail = await userob.getUserDetail(data.user_id);
+        user_detail = await userob.getUserDetail(data.user_id);
 
         if(Object.keys(user_detail).length > 0){
-          if(user_detail.profile_picture != "")
+          if(user_detail.profile_picture && user_detail.profile_picture != "")
             item_data.user_profile_picture = user_detail.profile_picture;
-          if(user_detail.displayName != "")
-          item_data.posted_by = user_detail.displayName;
+          if(user_detail.displayName && user_detail.displayName != "")
+            item_data.posted_by = user_detail.displayName;
         }
       }
 
       var media_id = data.media_id;
-      if(media_id != undefined && media_id.length > 0)  
+      if(media_id != undefined && Array.isArray(media_id) && media_id.length > 0)  
       {
         var default_media_detail = await mediaob.getMediaDetail(media_id[0]);
 
         if(default_media_detail && default_media_detail.length > 0 ){
-          delete default_media_detail[0].metadata
+          if(default_media_detail[0].metadata) {
+            delete default_media_detail[0].metadata;
+          }
           item_data.mediadata = default_media_detail;  
         }
-        
       }
 
       const params = {
@@ -150,11 +169,11 @@ module.exports.createMoment = (event, context, callback) => {
         }
 
         //Insert the Media Files Data
-        if(media_id && media_id.length > 0)
+        if(media_id && Array.isArray(media_id) && media_id.length > 0)
           var res = await mediaob.updateMomentIds(id, media_id);
 
         var thread_id = data.thread_id;
-        if(thread_id && thread_id.length > 0)
+        if(thread_id && thread_id != "")
           var res = await threadob.updateMomentCounter(thread_id, "add");
 
 
@@ -181,8 +200,7 @@ module.exports.createMoment = (event, context, callback) => {
 
         let friends_arr = await userob.getUserFriendIDs(data.user_id);
 
-
-        if(friends_arr.length > 0)
+        if(friends_arr && friends_arr.length > 0 && Object.keys(user_detail).length > 0)
         {
           console.log(friends_arr);
           //Store Activity Log
@@ -192,11 +210,10 @@ module.exports.createMoment = (event, context, callback) => {
                       object: 'moment:'+id,
                       foreign_id: 'moment:'+id,
                       event: { 
-                          'profile_picture' : user_detail.profile_picture,
-                          'displayName' : user_detail.displayName, 
+                          'profile_picture' : user_detail.profile_picture || '',
+                          'displayName' : user_detail.displayName || 'Unknown User', 
                       },
-                      //message: "&lt; a href='/user/"+data.user_id+"' &gt; "+ user_detail.displayName +"&lt;/a&gt; created a &lt;a href='/moment/"+id+"'&gt;Moment&lt;/a&gt;!",
-                      message: "<a href='/user/profile/"+data.user_id+"' > "+ user_detail.displayName +"</a> created a <a href='/moment/"+id+"'>Moment</a>!",
+                      message: "<a href='/user/profile/"+data.user_id+"' > "+ (user_detail.displayName || 'Unknown User') +"</a> created a <a href='/moment/"+id+"'>Moment</a>!",
                       time: Date.now()
                   });
         }

@@ -10,8 +10,16 @@ module.exports =
 	//Function to update the Like Counter in the Moment Table
 	updateMomentIds: function(datalineobject_id, media_id){
 
-		//return new Promise(function(resolve, reject){
+		return new Promise(function(resolve, reject){
 			
+			if (!media_id || !Array.isArray(media_id) || media_id.length === 0) {
+				resolve(0);
+				return;
+			}
+
+			let completed = 0;
+			let total = media_id.length;
+
 			media_id.forEach(function(mid){
 
 				var params = {
@@ -31,13 +39,18 @@ module.exports =
 				dynamo.update(params, (error, result) => {
 		      		if (error) {
 		        		console.log(error);
+		      		} else {
+		      			console.log("Media Table: moment ids are updated");
 		      		}
-		      		console.log("Media Table: moment ids are updated")
-		      		//resolve(1)
+		      		
+		      		completed++;
+		      		if (completed === total) {
+		      			resolve(1);
+		      		}
 			    });
 			});	
 
-		//});
+		});
 	},
 
 	//Function to update the Like Counter in the Moment Table
