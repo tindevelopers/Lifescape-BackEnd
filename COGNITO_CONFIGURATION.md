@@ -69,3 +69,8 @@ aws cognito-idp list-user-pool-clients \
 3. ✅ AWS Region: `us-east-1`
 
 You can now proceed with configuring your Lambda functions and API Gateway authorizers to use these Cognito values.
+
+
+
+
+

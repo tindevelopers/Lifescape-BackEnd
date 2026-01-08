@@ -20,7 +20,25 @@ var lambda = new AWS.Lambda({
 //function to create the moment
 module.exports.createMoment = (event, context, callback) => {
 
-    const data = event.body;//JSON.parse(event.body);
+    // Parse event body (could be string or object)
+    let data = event.body;
+    if (typeof data === 'string') {
+        try {
+            data = JSON.parse(data);
+        } catch (e) {
+            const errorResponse = {
+                statusCode: 400,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+                    'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ statusCode: 400, message: "Invalid JSON in request body" })
+            };
+            return callback(null, errorResponse);
+        }
+    }
     console.log(event)
     var id = uuid.v1();//Create Unique ID
 
@@ -118,7 +136,17 @@ module.exports.createMoment = (event, context, callback) => {
         if (error) //If Error
         {
           console.log(error)
-          return context.fail(JSON.stringify( { statusCode:500, message: "Server Error" } ));
+          const errorResponse = {
+            statusCode: 500,
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+              'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ statusCode: 500, message: "Server Error" })
+          };
+          return callback(null, errorResponse);
         }
 
         //Insert the Media Files Data
@@ -174,14 +202,36 @@ module.exports.createMoment = (event, context, callback) => {
         }
 
         const response = {
-            message: 'Moment Data inserted successfully!',
-            body: { object_id: id }
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+                'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: 'Moment Data inserted successfully!',
+                body: { object_id: id }
+            })
         };
         console.log(response)
 
-        callback(null, JSON.stringify(response));
+        callback(null, response);
 
       });
+    }).catch(error => {
+        console.error('Error in createMoment:', error);
+        const errorResponse = {
+            statusCode: 500,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type,Authorization',
+                'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ statusCode: 500, message: "Server Error: " + error.message })
+        };
+        callback(null, errorResponse);
     });
 }
 

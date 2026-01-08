@@ -573,3 +573,8 @@ class LifescapeAPI {
 const api = new LifescapeAPI(cognitoIdToken);
 const moment = await api.createMoment({ /* moment data */ });
 ```
+
+
+
+
+

@@ -35,6 +35,11 @@ provider:
     AWS_REGIONNAME: us-east-1
     COGNITO_USER_POOL_ID: us-east-1_uFR3CWkSg
     COGNITO_USER_POOL_CLIENT_ID: 4590eqn44aignshvnci9oo7al7
+    WASABI_ENDPOINT: https://s3.us-east-1.wasabisys.com
+    WASABI_REGION: us-east-1
+    WASABI_BUCKET_NAME: lifescape-images
+    # WASABI_ACCESS_KEY: Set in Lambda console or via AWS Secrets Manager
+    # WASABI_SECRET_KEY: Set in Lambda console or via AWS Secrets Manager
 
   role: arn:aws:iam::872469723818:role/lifescape-sls-role
   # iamRoleStatements:
@@ -505,7 +510,15 @@ functions:
 
           path: /moment
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Amz-Date
+              - X-Api-Key
+              - X-Amz-Security-Token
+            allowCredentials: false
           integration: lambda
 
  
@@ -907,7 +920,15 @@ functions:
       - http:
           path: media
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Amz-Date
+              - X-Api-Key
+              - X-Amz-Security-Token
+            allowCredentials: false
           integration: lambda
 
           authorizer: 
@@ -974,6 +995,47 @@ functions:
                       Content-Type: "'application/json'"
                 404:
                     pattern: '.*"statusCode":404.*' # JSON response
+                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
+                    headers:
+                      Content-Type: "'application/json'"
+
+
+  uploadToWasabi:
+    handler: media.uploadToWasabi
+    timeout: 30
+    events:
+      - http:
+          path: /media/wasabi/upload
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Amz-Date
+              - X-Api-Key
+              - X-Amz-Security-Token
+            allowCredentials: false
+          integration: lambda
+
+          authorizer: 
+            arn: arn:aws:lambda:us-east-1:872469723818:function:Auth-dev-authorizer
+            resultTtlInSeconds: 0
+  
+          documentation:
+            summary: "Upload image to Wasabi storage"
+            description: "Upload image to Wasabi S3-compatible storage and optionally save to DynamoDB"
+
+          response:
+            template: $input.path('$')
+            statusCodes:
+                500:
+                    pattern: '.*"statusCode":500.*' # JSON response
+                    template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
+                    headers:
+                      Content-Type: "'application/json'"
+                400:
+                    pattern: '.*"statusCode":400.*' # JSON response
                     template: '#set ($errorMessageObj = $util.parseJson($input.path("$.errorMessage"))) { "message" : "$errorMessageObj.message" }' 
                     headers:
                       Content-Type: "'application/json'"

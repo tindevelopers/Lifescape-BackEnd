@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Cognito Token</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .token-display {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .token-display label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .token-display textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75em;
+            resize: vertical;
+        }
+
+        .copy-btn {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+
+        .config-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85em;
+        }
+
+        .config-info strong {
+            color: #333;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 Get Cognito Token</h1>
+        <p class="subtitle">Login to get your bearer token for API requests</p>
+
+        <div class="config-info">
+            <strong>User Pool:</strong> us-east-1_uFR3CWkSg<br>
+            <strong>App Client:</strong> 4590eqn44aignshvnci9oo7al7<br>
+            <strong>Region:</strong> us-east-1
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required placeholder="user@example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required placeholder="Enter password">
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px;">Logging in...</p>
+            </div>
+
+            <button type="submit" class="btn" id="loginBtn">Get Token</button>
+
+            <div class="status" id="status"></div>
+
+            <div class="token-display" id="tokenDisplay" style="display: none;">
+                <label>Bearer Token (ID Token):</label>
+                <textarea id="tokenOutput" readonly></textarea>
+                <button type="button" class="copy-btn" onclick="copyToken()">Copy Token</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- AWS Cognito SDK -->
+    <script src="https://unpkg.com/amazon-cognito-identity-js@6.3.7/dist/amazon-cognito-identity.min.js"></script>
+
+    <script>
+        // Cognito Configuration
+        const poolData = {
+            UserPoolId: 'us-east-1_uFR3CWkSg',
+            ClientId: '4590eqn44aignshvnci9oo7al7'
+        };
+        const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+        const loginForm = document.getElementById('loginForm');
+        const status = document.getElementById('status');
+        const tokenDisplay = document.getElementById('tokenDisplay');
+        const tokenOutput = document.getElementById('tokenOutput');
+        const loading = document.getElementById('loading');
+        const loginBtn = document.getElementById('loginBtn');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            loginBtn.disabled = true;
+            loading.classList.add('active');
+            status.className = 'status';
+            status.textContent = '';
+            tokenDisplay.style.display = 'none';
+
+            try {
+                await login(email, password);
+            } catch (error) {
+                status.className = 'status error';
+                status.textContent = `❌ Error: ${error.message || error}`;
+                console.error('Login error:', error);
+            } finally {
+                loginBtn.disabled = false;
+                loading.classList.remove('active');
+            }
+        });
+
+        function login(email, password) {
+            return new Promise((resolve, reject) => {
+                const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+                    Username: email,
+                    Password: password
+                });
+
+                const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
+                    Username: email,
+                    Pool: userPool
+                });
+
+                cognitoUser.authenticateUser(authenticationDetails, {
+                    onSuccess: (result) => {
+                        const idToken = result.getIdToken().getJwtToken();
+                        const accessToken = result.getAccessToken().getJwtToken();
+                        const refreshToken = result.getRefreshToken().getToken();
+
+                        // Display token
+                        tokenOutput.value = idToken;
+                        tokenDisplay.style.display = 'block';
+
+                        status.className = 'status success';
+                        status.textContent = `✅ Login successful! Token copied below.`;
+
+                        // Store tokens in localStorage for convenience
+                        localStorage.setItem('cognito_id_token', idToken);
+                        localStorage.setItem('cognito_access_token', accessToken);
+                        localStorage.setItem('cognito_refresh_token', refreshToken);
+                        localStorage.setItem('cognito_email', email);
+
+                        console.log('ID Token:', idToken);
+                        console.log('Access Token:', accessToken);
+                        console.log('Refresh Token:', refreshToken);
+
+                        resolve(idToken);
+                    },
+                    onFailure: (err) => {
+                        let errorMessage = err.message || 'Login failed';
+                        
+                        if (err.code === 'NotAuthorizedException') {
+                            errorMessage = 'Invalid email or password';
+                        } else if (err.code === 'UserNotConfirmedException') {
+                            errorMessage = 'User email not confirmed. Please check your email.';
+                        } else if (err.code === 'UserNotFoundException') {
+                            errorMessage = 'User does not exist';
+                        }
+
+                        reject(new Error(errorMessage));
+                    },
+                    newPasswordRequired: (userAttributes, requiredAttributes) => {
+                        // Handle new password required
+                        reject(new Error('New password required. Please set a new password.'));
+                    }
+                });
+            });
+        }
+
+        function copyToken() {
+            tokenOutput.select();
+            document.execCommand('copy');
+            
+            const copyBtn = event.target;
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'Copied!';
+            copyBtn.style.background = '#28a745';
+            
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+                copyBtn.style.background = '#667eea';
+            }, 2000);
+        }
+
+        // Check if token exists in localStorage
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedToken = localStorage.getItem('cognito_id_token');
+            const savedEmail = localStorage.getItem('cognito_email');
+            
+            if (savedToken && savedEmail) {
+                status.className = 'status info';
+                status.textContent = `Found saved token for ${savedEmail}. Login again to refresh.`;
+                document.getElementById('email').value = savedEmail;
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
